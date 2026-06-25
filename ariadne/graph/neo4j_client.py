@@ -101,6 +101,12 @@ class GraphClient:
             edges = session.run("MATCH ()-[r]->() RETURN count(r) AS n").single()["n"]
         return {"nodes": nodes, "edges": edges}
 
+    def run_cypher(self, query: str, params: dict = None) -> list[dict]:
+        """Run a Cypher query and return results as a list of dicts."""
+        with self._driver.session() as session:
+            result = session.run(query, params or {})
+            return [dict(r) for r in result]
+
 
 if __name__ == "__main__":
     logging.basicConfig(
